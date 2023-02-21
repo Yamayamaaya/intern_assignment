@@ -2,14 +2,14 @@ import * as React from "react";
 import Board from "./board";
 
 type oneSquareType = "O" | "X" | null;
-type historyType = {
+interface historyType {
   squares: Array<oneSquareType>;
-};
-type gameState = {
+}
+interface gameState {
   history: Array<historyType>;
   xIsNext: boolean;
   stepNumber: number;
-};
+}
 
 class Game extends React.Component<{}, gameState> {
   constructor(props: {}) {
@@ -25,7 +25,7 @@ class Game extends React.Component<{}, gameState> {
     };
   }
 
-  handleClick(i: number) {
+  handleClick = (i: number) => {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
@@ -42,16 +42,16 @@ class Game extends React.Component<{}, gameState> {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
-  }
+  };
 
-  jumpTo(step: number) {
+  jumpTo = (step: number) => {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
     });
-  }
+  };
 
-  render() {
+  render = () => {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
@@ -86,10 +86,10 @@ class Game extends React.Component<{}, gameState> {
         </div>
       </div>
     );
-  }
+  };
 }
 
-function calculateWinner(squares: Array<oneSquareType>) {
+const calculateWinner = (squares: Array<oneSquareType>) => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -107,6 +107,6 @@ function calculateWinner(squares: Array<oneSquareType>) {
     }
   }
   return null;
-}
+};
 
 export default Game;

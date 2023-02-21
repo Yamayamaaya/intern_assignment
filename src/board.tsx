@@ -3,22 +3,22 @@ import Square from "./square";
 
 //board
 type oneSquareType = "O" | "X" | null;
-type boardProps = {
+interface boardProps {
   squares: Array<oneSquareType>;
   onClick: (i: number) => void;
-};
+}
 
 class Board extends React.Component<boardProps, {}> {
-  renderSquare(i: number) {
+  renderSquare = (i: number) => {
     return (
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
     );
-  }
+  };
 
-  render() {
+  render = () => {
     return (
       <div>
         <div className="board-row">
@@ -38,7 +38,7 @@ class Board extends React.Component<boardProps, {}> {
         </div>
       </div>
     );
-  }
+  };
 }
 
 export default Board;
