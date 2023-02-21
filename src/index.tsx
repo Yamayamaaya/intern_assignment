@@ -1,17 +1,39 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { VFC } from "react";
 import "./index.css";
 
-function Square(props) {
+//game
+type oneSquareType = "O" | "X" | null;
+type historyType = {
+  squares: Array<oneSquareType>;
+};
+type gameState = {
+  history: Array<historyType>;
+  xIsNext: boolean;
+  stepNumber: number;
+};
+
+//board
+type boardProps = {
+  squares: Array<oneSquareType>;
+  onClick: (i: number) => void;
+};
+
+type squareProps = {
+  value: oneSquareType;
+  onClick: () => void;
+};
+const Square: VFC<squareProps> = (props) => {
   return (
     <button className="square" onClick={props.onClick}>
       {props.value}
     </button>
   );
-}
+};
 
-class Board extends React.Component {
-  renderSquare(i) {
+class Board extends React.Component<boardProps, {}> {
+  renderSquare(i: number) {
     return (
       <Square
         value={this.props.squares[i]}
@@ -43,8 +65,8 @@ class Board extends React.Component {
   }
 }
 
-class Game extends React.Component {
-  constructor(props) {
+class Game extends React.Component<{}, gameState> {
+  constructor(props: {}) {
     super(props);
     this.state = {
       history: [
@@ -57,7 +79,7 @@ class Game extends React.Component {
     };
   }
 
-  handleClick(i) {
+  handleClick(i: number) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
@@ -76,7 +98,7 @@ class Game extends React.Component {
     });
   }
 
-  jumpTo(step) {
+  jumpTo(step: number) {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
@@ -109,7 +131,7 @@ class Game extends React.Component {
         <div className="game-board">
           <Board
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
+            onClick={(i: number) => this.handleClick(i)}
           />
         </div>
         <div className="game-info">
@@ -123,10 +145,11 @@ class Game extends React.Component {
 
 // ========================================
 
+// @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
 
-function calculateWinner(squares) {
+function calculateWinner(squares: Array<oneSquareType>) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
