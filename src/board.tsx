@@ -7,31 +7,30 @@ type oneSquareType = "O" | "X" | null;
 interface boardProps {
   squares: Array<oneSquareType>;
   onClick: (i: number) => void;
+  SIZE: number;
 }
 const Board: FC<boardProps> = (props) => {
   const renderSquare = (i: number) => {
     return <Square value={props.squares[i]} onClick={() => props.onClick(i)} />;
   };
+  const renderSquares = (n: number) => {
+    const list: JSX.Element[] = [];
+    for (let f0 = 0; f0 < n; f0++) {
+      list.push(<div className="board-row">{renderRow(f0, n)}</div>);
+    }
+    return list;
+  };
 
-  return (
-    <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
-  );
+  const renderRow = (rowCount: number, maxColumnCount: number) => {
+    const rowList: JSX.Element[] = [];
+    for (let f1: number = 0; f1 < maxColumnCount; f1++) {
+      const squareNumber: number = rowCount * props.SIZE + f1;
+      rowList.push(renderSquare(squareNumber));
+    }
+    return rowList;
+  };
+
+  return <div>{renderSquares(props.SIZE)}</div>;
 };
 
 export default Board;
