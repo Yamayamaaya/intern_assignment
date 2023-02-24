@@ -11,7 +11,7 @@ type ForReducer = {
   mode: "handleClick" | "jumpTo";
   i: number;
 };
-const masterSize: number = 5;
+const masterSize: number = 10;
 const initialState: State = {
   history: [
     { squaresRecord: Array<oneSquareType>(masterSize * masterSize).fill(null) },
