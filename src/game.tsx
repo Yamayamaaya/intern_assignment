@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useRef } from "react";
 import Board from "./board";
 
 type State = {
@@ -11,7 +11,7 @@ type ForReducer = {
   mode: "handleClick" | "jumpTo";
   i: number;
 };
-const masterSize: number = 10;
+let masterSize: number = 5;
 const initialState: State = {
   history: [
     { squaresRecord: Array<oneSquareType>(masterSize * masterSize).fill(null) },
@@ -19,23 +19,6 @@ const initialState: State = {
   stepNumber: 0,
   xIsNext: true,
 };
-
-// const ControlledForm = () => {
-//   const [inputSize, SetInputSize] = useState<number>(0);
-//   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     // SetInputSize(event.target.value);
-//     console.log(event.target.value);
-//   };
-//   const handleSubmit = () => {
-//     console.log(inputSize);
-//   };
-//   return (
-//     <div>
-//       <input type="number" value={inputSize} onChange={handleNameChange} />
-//       <button onClick={handleSubmit}>Submit</button>
-//     </div>
-//   );
-// };
 
 const reducer = (state: State, f: ForReducer): State => {
   switch (f.mode) {
@@ -74,6 +57,8 @@ const reducer = (state: State, f: ForReducer): State => {
 
 const Game = () => {
   const [state, dispatch_ox] = useReducer(reducer, initialState);
+  const [inputSize, SetInputSize] = useState<number>(0);
+  const inputSizeRef = useRef(null);
   // console.log(state);
   // console.log("↑stateのデバッグログ");
   // console.log(state.stepNumber + "state.stepNumberのデバッグログ");
@@ -81,9 +66,16 @@ const Game = () => {
   // console.log("↑state.historyのデバッグログ");
   const current = state.history[state.stepNumber];
   // console.log(current);
-  console.log(current.squaresRecord);
-  console.log("---------------------------------------------------------");
+  // console.log(current.squaresRecord);
+  // console.log("---------------------------------------------------------");
   const winner = calculateWinner(current.squaresRecord);
+  const handleSubmit = () => {
+    if (inputSizeRef.current === null) {
+      masterSize = 5;
+    } else {
+      masterSize = inputSizeRef.current[value];
+    }
+  };
   const moves = state.history.map((step, move) => {
     const desc = move ? "Go to move #" + move : "Go to game start";
     return (
@@ -108,10 +100,16 @@ const Game = () => {
         <Board
           squares={current.squaresRecord}
           onClick={(i) => dispatch_ox({ mode: "handleClick", i: i })}
-          SIZE={masterSize}
+          SIZE={inputSize}
         />
       </div>
       <div className="game-info">
+        <div>
+          <div>
+            <input type="number" ref={inputSizeRef} />
+            <button onClick={handleSubmit}>Submit</button>
+          </div>
+        </div>
         <div>{status}</div>
         <ol>{moves}</ol>
       </div>
@@ -164,7 +162,7 @@ const calculateWinner = (squaresResult: Array<oneSquareType>) => {
       LineResult.push(squaresResult[lineList[i][f2]]);
     }
     const thisLineResult: oneSquareType[] = [...new Set(LineResult)];
-    console.log(LineResult, i);
+    // console.log(LineResult, i);
     if (thisLineResult.length === 1 && thisLineResult[0] != null) {
       return thisLineResult[0];
     }
